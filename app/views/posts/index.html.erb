@@ -1,0 +1,51 @@
+<h1>saii</h1>
+<% if user_signed_in? %>
+    <%= button_to 'Signout', destroy_user_session_path, method: :delete, form: {turbolink: false} %>
+<% else %>
+    <p>You are not logged in.</p>
+<% end %>
+<button><%= link_to 'Create post', new_post_path %></button>
+
+<h1>All Posts</h1>
+<ul>
+  <% @posts.each do |post| %>
+    <li>
+    <%= post.user.email %>
+    </li>
+    <%= link_to post.content, post_path(post) %><p>Posted on: <%= post.created_at.in_time_zone('Asia/Kolkata').strftime('%B %d, %Y %I:%M %p %Z') %></p>
+    <% @post.comments.each do |comment| %>
+      <div class="comment">
+        <strong><%= comment.user.username %>:</strong>
+        <%= comment.content %>
+      </div>
+    <% end %>
+  <div class="user-name">
+    <p>
+  
+      <% if post.user.present? %>
+        <% if current_user.following?(post.user) %>
+          <%= button_to 'Unfollow', friendship_path(user_id: post.user.id), method: :delete %>
+        <% else %>
+          <%= button_to 'Follow', friendships_path(user_id: post.user.id), method: :post %>
+        <% end %>
+      <% end %>
+    </p>
+     
+  </div>
+  <% end %>
+</ul>
+
+Likes: <%= @post.likes.where(like: true).count %>
+Dislikes: <%= @post.likes.where(like: false).count %>
+
+<% if @post.user.present? %>
+  <p>
+    Created by: <%= @post.user.email %>
+  </p>
+  <p>
+    Followers: <%= @post.user.followers.count %>
+  </p>
+  
+<% end %>
+
+
