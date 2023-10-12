@@ -8,18 +8,29 @@
 <button><%= link_to 'Edit', edit_post_path(@post) %></button>
 
 <%= link_to 'Back', posts_path %>
-<%= form_with(model: @post, local: true) do |form| %>
-  <div class="field">
-    <%= form.label :comment %>
-    <%= form.text_area :comment %>
-  </div>
-  <div class="actions">
-    <%= form.submit 'Add Comment' %>
-  </div>
+
+
+<% if user_signed_in? %>
+  <%= form_for([@post, @post.comments.build]) do |f| %>
+    <div class="field">
+      <%= f.text_area :content, placeholder: 'Add a comment...' %>
+    </div>
+    <div class="actions">
+      <%= f.submit 'Add Comment' %>
+    </div>
+  <% end %>
 <% end %>
+
 <% @post.comments.each do |comment| %>
-  <li><strong><%= comment.user.email %></strong>:</strong> <%= comment.content %></li><br>
+  <p>
+    <strong><%= comment.user&.email %>:</strong>
+    <%= comment.content %>
+    <%= link_to 'Delete Comment', [comment.post, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user == current_user %>
+  </p>
 <% end %>
+
+
+
 
 <% if @user.present? %>
   <h2>Followers:</h2>

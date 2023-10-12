@@ -26,13 +26,21 @@ class UsersController < ApplicationController
     
     def follow
         @user = User.find(params[:id])
-        @current_user.followees << @user
-        redirect_to user_path(@user)
-    end
+        if current_user.follow(@user)
+          flash[:notice] = "You are now following this user."
+        else
+          flash[:alert] = "Unable to follow this user."
+        end
+        redirect_to @user
+      end
     
-    def unfollow
+      def unfollow
         @user = User.find(params[:id])
-        @current_user.followed_users.find_by(followee_id: @user.id).destroy
-        redirect_to user_path(@user)
-    end
+        if current_user.unfollow(@user)
+          flash[:notice] = "You have unfollowed this user."
+        else
+          flash[:alert] = "Unable to unfollow this user."
+        end
+        redirect_to @user
+      end
 end

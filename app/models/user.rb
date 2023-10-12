@@ -8,15 +8,16 @@ class User < ApplicationRecord
 
     has_many :friendships, foreign_key: 'follower_id', dependent: :destroy
     has_many :followed_users, through: :friendships, source: :followed
-    has_many :followers, class_name: 'Friendship', foreign_key: 'friend_id'
+    has_many :followers, class_name: 'Friendship', foreign_key: 'followed_user_id'
 
     
     def follow(other_user)
-        followed_users << other_user
+        friendships.create(followed_id: other_user.id)
     end
-
+    
     def unfollow(other_user)
-        followed_users.delete(other_user)
+        friendship = friendships.find_by(followed_id: other_user.id)
+        friendship.destroy if friendship
     end
 
     def following?(other_user)

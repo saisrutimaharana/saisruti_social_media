@@ -10,8 +10,15 @@ class CommentsController < ApplicationController
     if @comment.save
       redirect_to @post, notice: 'Comment was successfully created.'
     else
-      render 'posts/show' # You may need to adjust this depending on your post view
+      render @post, alert: 'Error creating comment.' 
     end
+  end
+
+  def destroy
+    @comment = Comment.find(params[:id])
+    @post = @comment.post
+    @comment.destroy
+    redirect_to @post, notice: 'Comment was successfully deleted.'
   end
 
   private

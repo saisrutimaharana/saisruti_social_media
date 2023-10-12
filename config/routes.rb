@@ -14,9 +14,12 @@ Rails.application.routes.draw do
     post 'dislike_post', to: 'likes#dislike', on: :member
 
     member do
-      post 'follow'
-      delete 'unfollow'
+      post 'follow', to: 'users#follow'
+      delete 'unfollow', to: 'users#unfollow'
     end
+  end
+  resources :posts do
+    resources :comments
   end
   resources :friendships, only: [:create, :destroy]
   root 'posts#index'
