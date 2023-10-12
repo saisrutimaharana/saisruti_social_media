@@ -35,8 +35,7 @@
   <% end %>
 </ul>
 
-Likes: <%= @post.likes.where(like: true).count %>
-Dislikes: <%= @post.likes.where(like: false).count %>
+
 
 <% if @post.user.present? %>
   <p>

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'likes/create'
   get 'comments/create'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :posts, only: [:index, :show] 
 
   # Defines the root path route ("/")
   # root "articles#index"
@@ -19,7 +20,10 @@ Rails.application.routes.draw do
     end
   end
   resources :posts do
-    resources :comments
+    resources :comments, only: [:create, :destroy]
+
+    resources :likes, only: [:create, :destroy]
+    # get 'comments/:id', to: 'comments#show', on: :member, as: 'comment'
   end
   resources :friendships, only: [:create, :destroy]
   root 'posts#index'

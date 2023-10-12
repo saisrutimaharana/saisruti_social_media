@@ -1,26 +1,23 @@
-# app/controllers/likes_controller.rb
 class LikesController < ApplicationController
   before_action :authenticate_user!
 
-  def like
+  def create
     @post = Post.find(params[:post_id])
-    @like = current_user.likes.build(post: @post, like: true)
-
+    @like = @post.likes.build(user: current_user)
     if @like.save
-      redirect_to @post, notice: 'You liked the post.'
+      redirect_to @post, notice: 'Liked!'
     else
-      redirect_to @post, alert: 'Unable to like the post.'
+      redirect_to @post, alert: 'Error liking the post.'
     end
   end
 
-  def dislike
+  def destroy
     @post = Post.find(params[:post_id])
-    @dislike = current_user.likes.build(post: @post, like: false)
-
-    if @dislike.save
-      redirect_to @post, notice: 'You disliked the post.'
+    @like = Like.find(params[:id])
+    if @like.destroy
+      redirect_to @post, notice: 'Unliked.'
     else
-      redirect_to @post, alert: 'Unable to dislike the post.'
+      redirect_to @post, alert: 'Error unliking the post.'
     end
   end
 end

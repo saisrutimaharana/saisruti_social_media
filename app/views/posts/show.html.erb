@@ -25,9 +25,18 @@
   <p>
     <strong><%= comment.user&.email %>:</strong>
     <%= comment.content %>
-    <%= link_to 'Delete Comment', [comment.post, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user == current_user %>
   </p>
 <% end %>
+<%= form_for([@post, @post.likes.build], remote: true) do |f| %>
+  <div class="field">
+    <%= f.hidden_field :user_id, value: current_user.id %>
+  </div>
+  <div class="actions">
+    <%= f.submit 'Like', class: 'btn btn-primary' %>
+  </div>
+<% end %>
+
+<%= link_to 'Unlike', [@post, like], method: :delete if @post.liked_by?(current_user) %>
 
 
 
